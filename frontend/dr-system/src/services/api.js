@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const API_URL =
-  "https://erandi25-dr-vision-ai.hf.space";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const predictImage = async (file) => {
+
   const formData = new FormData();
 
   formData.append("file", file);
@@ -13,8 +13,7 @@ export const predictImage = async (file) => {
     formData,
     {
       headers: {
-        "Content-Type":
-          "multipart/form-data",
+        "Content-Type": "multipart/form-data",
       },
     }
   );

@@ -19,6 +19,8 @@ import {
 
 import "./App.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -28,33 +30,48 @@ function App() {
   const handleImage = (e) => {
     const file = e.target.files[0];
 
+    if (!file) return;
+
     setImage(file);
     setPreview(URL.createObjectURL(file));
   };
 
   const predict = async () => {
-    if (!image) return;
-
-    const formData = new FormData();
-    formData.append("file", image);
+    if (!image) {
+      alert("Please upload an image");
+      return;
+    }
 
     try {
       setLoading(true);
 
+      const formData = new FormData();
+      formData.append("file", image);
+
       const res = await axios.post(
-        "https://erandi25-dr-vision-ai.hf.space/predict",
-        formData
+        `${API_URL}/predict`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       setResult(res.data);
     } catch (err) {
-      alert("Prediction Failed");
-    }
+      console.error(err);
 
-    setLoading(false);
+      alert(
+        err.response?.data?.error ||
+        "Prediction Failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const chartData = result
+  const chartData = result?.probabilities
     ? Object.entries(result.probabilities).map(
         ([name, value]) => ({
           name,
@@ -68,13 +85,12 @@ function App() {
 
       <header>
         <h1>DR Vision AI</h1>
-        <p>Diabetic Retinopathy (DR) detection system</p>
+        <p>Diabetic Retinopathy (DR) Detection System</p>
       </header>
 
       <div className="grid">
 
         {/* Upload Card */}
-
         <div className="card">
 
           <h2>
@@ -91,12 +107,15 @@ function App() {
           {preview && (
             <img
               src={preview}
-              alt=""
+              alt="Preview"
               className="preview"
             />
           )}
 
-          <button onClick={predict}>
+          <button
+            onClick={predict}
+            disabled={loading}
+          >
             {loading
               ? "Analyzing..."
               : "Analyze Retina"}
@@ -105,7 +124,6 @@ function App() {
         </div>
 
         {/* Result Card */}
-
         <div className="card">
 
           <h2>
@@ -117,9 +135,7 @@ function App() {
             <>
               <div className="result-box">
 
-                <h3>
-                  {result.prediction}
-                </h3>
+                <h3>{result.prediction}</h3>
 
                 <p>
                   Confidence:
@@ -133,8 +149,7 @@ function App() {
 
               <div className="risk">
 
-                {result.prediction ===
-                "No_DR" ? (
+                {result.prediction === "No_DR" ? (
                   <span className="green">
                     <ShieldCheck />
                     Low Risk
@@ -154,14 +169,11 @@ function App() {
 
       </div>
 
-      {/* Probability Chart */}
-
+      {/* Chart */}
       {result && (
         <div className="card chart-card">
 
-          <h2>
-            Prediction Probability
-          </h2>
+          <h2>Prediction Probability</h2>
 
           <ResponsiveContainer
             width="100%"
@@ -179,7 +191,6 @@ function App() {
       )}
 
       {/* Recommendation */}
-
       {result && (
         <div className="card">
 
