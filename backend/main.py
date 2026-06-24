@@ -38,13 +38,31 @@ app.add_middleware(
 )
 
 # =====================================================
+# DOWNLOAD MODEL FROM GOOGLE DRIVE
+# =====================================================
+
+MODEL_PATH = "Hybrid_DR_Model.h5"
+
+if not os.path.exists(MODEL_PATH):
+
+    print("Downloading model from Google Drive...")
+
+    gdown.download(
+        "https://drive.google.com/uc?id=1XhZIIlCM0UOkLkqnGHAWN-JSPO3p8p-5",
+        MODEL_PATH,
+        quiet=False
+    )
+
+    print("Model downloaded successfully!")
+
+# =====================================================
 # LOAD MODEL
 # =====================================================
 
 print("Loading model...")
 
 model = load_model(
-    "Hybrid_DR_Model.keras",   # or .h5
+    MODEL_PATH,
     compile=False
 )
 
