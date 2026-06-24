@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL =
+  "https://erandi25-dr-vision-ai.hf.space";
 
 export const predictImage = async (file) => {
   const formData = new FormData();
@@ -12,7 +13,8 @@ export const predictImage = async (file) => {
     formData,
     {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type":
+          "multipart/form-data",
       },
     }
   );
