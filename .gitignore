@@ -1,0 +1,18 @@
+# Python
+backend/venv/
+backend/__pycache__/
+*.pyc
+
+# Node
+frontend/dr-system/node_modules/
+backend/node_modules/
+
+# Model files
+backend/*.h5
+backend/*.keras
+
+# Environment
+.env
+
+# VS Code
+.vscode/
