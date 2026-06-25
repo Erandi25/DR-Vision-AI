@@ -85,7 +85,7 @@ function App() {
 
       <header>
         <h1>DR Vision AI</h1>
-        <p>Diabetic Retinopathy (DR) Detection System</p>
+        <p>An Automated Deep Learning-Based Diabetic Retinopathy Identification and Severity Grading System</p>
       </header>
 
       <div className="grid">
